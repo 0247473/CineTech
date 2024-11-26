@@ -1,0 +1,9 @@
+public enum EstadoVendedorTaquilla {
+    INICIAR,
+    ESPERAR,
+    ATENDER,
+    VERIFICAR_SI_HAY_BOLETO,
+    IMPRIMIR_BOLETO,
+    COMENTAR_AL_CLIENTE,
+    TURNO_ACABADO,
+}
