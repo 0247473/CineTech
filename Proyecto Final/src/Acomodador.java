@@ -21,6 +21,9 @@ public class Acomodador extends Thread {
         setName("Acomodador-" + id);
     }
 
+    // Inicia en el estado de esperar, mientras trabaja, checa si hay clientes, si no, se queda en el estado de esperar
+    // Cuando acabe el turno, cambia de estado a turno acabado
+    // Checa constantemente si hay clientes para mover el cliente a su asiento
     @Override
     public void run() {
         estado = EstadoAcomodador.ESPERAR_EN_LA_SALA;
@@ -30,7 +33,6 @@ public class Acomodador extends Thread {
                 if (cliente != null) {
                     atenderCliente(cliente);
                 } else {
-                    // Si no hay clientes en la cola, verificar si hay clientes en el cine
                     if (!recursos.hayClientesEnCine()) {
                         estado = EstadoAcomodador.TURNO_ACABADO;
                         System.out.println("Acomodador " + id + " ha terminado su turno.");
@@ -39,7 +41,6 @@ public class Acomodador extends Thread {
                     }
                 }
 
-                // Verificar si la película ya comenzó y hay clientes esperando
                 if (recursos.isPeliculaIniciada() && !recursos.getColaAcomodador().isEmpty()) {
                     estado = EstadoAcomodador.ESPERAR_ASIENTOS_DISPONIBLES;
                 }
@@ -51,8 +52,8 @@ public class Acomodador extends Thread {
         }
     }
 
+    // Aqui si hay un cliente, cambia su estado y lo mueve a su asiento y regresa a su puesto
     private void atenderCliente(Cliente cliente) {
-        // Verificar si se puede acomodar al cliente
         if (!recursos.puedeEntrarSala()) {
             estado = EstadoAcomodador.ESPERAR_ASIENTOS_DISPONIBLES;
             System.out.println("Acomodador " + id + " esperando asientos disponibles o inicio de siguiente función");
@@ -73,6 +74,7 @@ public class Acomodador extends Thread {
         estado = EstadoAcomodador.ESPERAR_EN_LA_SALA;
     }
 
+    // Se pone en pausa durante un tiempo
     private void dormir(int milisegundos) {
         try {
             Thread.sleep(milisegundos);

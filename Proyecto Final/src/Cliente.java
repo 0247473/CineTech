@@ -33,10 +33,12 @@ public class Cliente extends Thread {
         this.tiempoBaño = tiempoBaño;
     }
 
+    // Verifica si el cliente puede comprar un boleto, si hay, continua, si no, se va a casa
+    // Despues entra al cine y se decide por probabilidad si quiere dulces o no y si necesita ir al baño o no
+    // Ve la pelicula, sale del cine y se va a casa y manda un mensaje al servidor avisando que se va a casa
     @Override
     public void run() {
         try {
-            // Verificar si hay tiempo suficiente para toda la experiencia
             long tiempoTotal = calcularTiempoTotal();
             if (tiempoTotal + System.currentTimeMillis() > recursos.getTiempoInicioPelicula()) {
                 System.out.println("Cliente " + id + " no alcanzará a ver la película, se va a casa.");
@@ -48,7 +50,6 @@ public class Cliente extends Thread {
 
             entrarAlCine();
 
-            // Verificar si hay asientos disponibles antes de hacer fila
             if (recursos.getAsientosDisponibles() <= 0) {
                 System.out.println("Cliente " + id + " ve que no hay asientos disponibles, se va a casa.");
                 estado = EstadoCliente.CAMINAR_A_LA_SALIDA;
@@ -75,22 +76,25 @@ public class Cliente extends Thread {
         }
     }
 
+    // Aqui explica cuanto se tarda en realizar todo su movimiento
     private long calcularTiempoTotal() {
         long tiempo = tiempoCompraBoleto;
         if (necesitaBaño)
             tiempo += tiempoBaño;
         if (quiereDulces)
             tiempo += tiempoCompraDulces;
-        tiempo += 2000; // Tiempo estimado para movimientos entre áreas
+        tiempo += 2000;
         return tiempo;
     }
 
+    //Cambia de estado a entrar al cine
     private void entrarAlCine() throws InterruptedException {
         estado = EstadoCliente.ENTRAR_AL_CINE;
         System.out.println("Cliente " + id + " entrando al cine");
         dormir(1000);
     }
 
+    //Cambia de estado a comprar boleto
     private void comprarBoleto() throws InterruptedException {
         estado = EstadoCliente.COMPRAR_BOLETO;
         System.out.println("Cliente " + id + " haciendo fila para boletos");
@@ -102,6 +106,7 @@ public class Cliente extends Thread {
         System.out.println("Cliente " + id + " ha recibido su boleto");
     }
 
+    //Cambia de estado a caminar a la dulceria
     private void comprarDulces() throws InterruptedException {
         estado = EstadoCliente.CAMINAR_A_LA_DULCERIA;
         System.out.println("Cliente " + id + " caminando a la dulcería");
@@ -114,10 +119,9 @@ public class Cliente extends Thread {
         System.out.println("Cliente " + id + " ha recibido sus dulces");
     }
 
+    //Cambia de estado a esperar al acomodador, ve la pelicula y sale del cine
     private void verPelicula() throws InterruptedException {
         estado = EstadoCliente.ESPERAR_AL_ACOMODADOR;
-
-        // Si no puede entrar a la sala, el cliente se va
         if (!recursos.puedeEntrarSala()) {
             System.out.println("Cliente " + id + " no puede entrar a la sala, se va del cine");
             estado = EstadoCliente.CAMINAR_A_LA_SALIDA;
@@ -136,13 +140,11 @@ public class Cliente extends Thread {
         recursos.incrementarClientesEnSala();
 
         try {
-            // Esperar a que todos estén listos para ver la película
             recursos.esperarInicioPelicula();
 
             estado = EstadoCliente.VER_LA_PELICULA;
             System.out.println("Cliente " + id + " está viendo la película");
 
-            // Esperar a que termine la película
             recursos.esperarFinPelicula();
 
         } catch (BrokenBarrierException e) {
@@ -151,12 +153,15 @@ public class Cliente extends Thread {
             recursos.decrementarClientesEnSala();
         }
     }
+
+    //Sale del cine
     private void salir() throws InterruptedException {
         estado = EstadoCliente.CAMINAR_A_LA_SALIDA;
         dormir(tiempoSalir);
         System.out.println("Cliente " + id + " saliendo del cine");
     }
 
+    // Manda una conexion al servidor el cual manda el ID del cliente para que se imprima en el servidor
     private void registrar(String nombre) {
         try (Socket socket = new Socket("localhost", 1234)) {
             PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
@@ -167,6 +172,7 @@ public class Cliente extends Thread {
         }
     }
 
+    //Cambia el estado a ir al baño
     private void irAlBaño() throws InterruptedException {
         estado = EstadoCliente.CAMINAR_AL_BAÑO;
         System.out.println("Cliente " + id + " usando el baño");
@@ -177,7 +183,6 @@ public class Cliente extends Thread {
         Thread.sleep(milisegundos);
     }
 
-    // Getters y setters
     public EstadoCliente getEstado() {
         return estado;
     }

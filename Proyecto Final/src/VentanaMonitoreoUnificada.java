@@ -84,7 +84,6 @@ public class VentanaMonitoreoUnificada {
     private void actualizarClientes(List<Cliente> clientes) {
         clientesModel.setRowCount(0);
 
-        // Mostrar cada cliente individualmente con su ID y estado
         for (Cliente cliente : clientes) {
             clientesModel.addRow(new Object[] {
                     cliente.getClienteId(),
@@ -96,7 +95,6 @@ public class VentanaMonitoreoUnificada {
     private void actualizarVendedores(List<VendedorTaquilla> taquilleros, List<VendedorDulceria> dulceros) {
         vendedoresModel.setRowCount(0);
 
-        // Mostrar cada taquillero individualmente
         for (VendedorTaquilla taquillero : taquilleros) {
             vendedoresModel.addRow(new Object[] {
                     "Taquillero",
@@ -105,7 +103,6 @@ public class VentanaMonitoreoUnificada {
             });
         }
 
-        // Mostrar cada dulcero individualmente
         for (VendedorDulceria dulcero : dulceros) {
             vendedoresModel.addRow(new Object[] {
                     "Dulcero",
@@ -118,7 +115,6 @@ public class VentanaMonitoreoUnificada {
     private void actualizarAcomodadores(List<Acomodador> acomodadores) {
         acomodadoresModel.setRowCount(0);
 
-        // Mostrar cada acomodador individualmente
         for (Acomodador acomodador : acomodadores) {
             acomodadoresModel.addRow(new Object[] {
                     acomodador.getId(),

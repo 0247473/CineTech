@@ -63,31 +63,26 @@ public class VentanaVisual extends JFrame {
         }
 
         private void dibujarAreas(Graphics2D g2d) {
-            // Área de taquilla
             g2d.setColor(COLOR_TAQUILLA);
             g2d.fillRect(50, 50, 200, 100);
             g2d.setColor(Color.BLACK);
             g2d.drawString("TAQUILLA", 120, 90);
 
-            // Área de dulcería
             g2d.setColor(COLOR_DULCERIA);
             g2d.fillRect(300, 50, 200, 100);
             g2d.setColor(Color.BLACK);
             g2d.drawString("DULCERÍA", 370, 90);
 
-            // Área de sala de cine
             g2d.setColor(COLOR_SALA);
             g2d.fillRect(550, 50, 400, 400);
             g2d.setColor(Color.BLACK);
             g2d.drawString("SALA DE CINE", 700, 90);
 
-            // Baños
             g2d.setColor(new Color(220, 220, 220));
             g2d.fillRect(300, 200, 100, 100);
             g2d.setColor(Color.BLACK);
             g2d.drawString("BAÑOS", 330, 250);
 
-            // Puerta de salida
             g2d.setColor(new Color(150, 150, 150));
             g2d.fillRect(getWidth() - 50, getHeight() - 100, 30, 60);
             g2d.setColor(Color.BLACK);
@@ -95,7 +90,6 @@ public class VentanaVisual extends JFrame {
         }
 
         private void dibujarTrabajadores(Graphics2D g2d) {
-            // Dibujar taquilleros
             int x = 60;
             for (VendedorTaquilla taquillero : taquilleros) {
                 if (taquillero.isEstaEnTurno()) {
@@ -104,7 +98,6 @@ public class VentanaVisual extends JFrame {
                 x += 40;
             }
 
-            // Dibujar dulceros
             x = 310;
             for (VendedorDulceria dulcero : dulceros) {
                 if (dulcero.isEstaEnTurno()) {
@@ -113,7 +106,6 @@ public class VentanaVisual extends JFrame {
                 x += 40;
             }
 
-            // Dibujar acomodadores
             x = 560;
             for (Acomodador acomodador : acomodadores) {
                 if (acomodador.isEstaEnTurno()) {

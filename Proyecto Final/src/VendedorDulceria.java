@@ -33,7 +33,6 @@ public class VendedorDulceria extends Thread {
                 if (cliente != null) {
                     atenderCliente(cliente);
                 } else {
-                    // Si no hay clientes en la cola, verificar si hay clientes en el cine
                     if (!recursos.hayClientesEnCine()) {
                         estado = EstadoVendedorDulceria.TURNO_ACABADO;
                         System.out.println("Vendedor de dulcería " + id + " ha terminado su turno.");
@@ -70,7 +69,6 @@ public class VendedorDulceria extends Thread {
         }
     }
 
-    // Getters y setters
     public EstadoVendedorDulceria getEstado() {
         return estado;
     }

@@ -57,27 +57,21 @@ public class RecursosCine {
         iniciarControladorFunciones();
     }
 
+    // Espera a los clientes para iniciar y inicia la funcion cuando todos esten listos, no se aceptan despues clientes
     private void iniciarControladorFunciones() {
         Thread controlador = new Thread(() -> {
             try {
                 while (funcionActual <= totalFunciones) {
-                    // Esperar a que todos los clientes estén listos
                     System.out.println("Esperando que los clientes estén listos para la función " + funcionActual);
                     barrierInicioPelicula.await();
-
                     peliculaIniciada = true;
                     System.out.println("¡Inicia la función " + funcionActual + "!");
-
-                    // Duración de la película
                     Thread.sleep(duracionPelicula);
-
-                    // Esperar a que todos los clientes terminen de ver la película
                     barrierFinPelicula.await();
-
                     peliculaTerminada = true;
                     System.out.println("¡Termina la función " + funcionActual + "!");
 
-                    prepararSiguienteFuncion();
+                    //prepararSiguienteFuncion();
                 }
             } catch (InterruptedException | BrokenBarrierException e) {
                 Thread.currentThread().interrupt();
@@ -87,6 +81,7 @@ public class RecursosCine {
         controlador.start();
     }
 
+    /* 
     private void prepararSiguienteFuncion() {
         funcionActual++;
         if (funcionActual <= totalFunciones) {
@@ -98,18 +93,19 @@ public class RecursosCine {
             tiempoInicioPelicula = System.currentTimeMillis() + 5000;
             System.out.println("Preparando función " + funcionActual);
         }
+    }*/
+
+    //Checa si hay clientes en el cine, sino para mandar a los trabajadores para que acaben turno
+    public synchronized boolean hayClientesEnCine() {
+        return clientesEnSala.get() > 0 || 
+                !colaTaquilla.isEmpty() || 
+                !colaDulceria.isEmpty() || 
+                !colaAcomodador.isEmpty() || 
+                clientesSinBoleto.get() > 0 || 
+                clientesQuierenDulces.get() > 0 || 
+                clientesConBoleto.get() > 0; 
     }
 
-    public synchronized boolean hayClientesEnCine() {
-        // Verifica si hay clientes en cualquier parte del cine
-        return clientesEnSala.get() > 0 || // Clientes viendo la película
-                !colaTaquilla.isEmpty() || // Clientes esperando comprar boletos
-                !colaDulceria.isEmpty() || // Clientes esperando comprar dulces
-                !colaAcomodador.isEmpty() || // Clientes esperando ser acomodados
-                clientesSinBoleto.get() > 0 || // Clientes que aún no han comprado boleto
-                clientesQuierenDulces.get() > 0 || // Clientes que quieren comprar dulces
-                clientesConBoleto.get() > 0; // Clientes con boleto que aún no han sido acomodados
-    }
     private void iniciarPelicula() {
         peliculaIniciada = true;
         System.out.println("¡La película está comenzando! Todos los espectadores están en sus asientos.");
@@ -124,6 +120,7 @@ public class RecursosCine {
         return asientosDisponibles.get() > 0 && !peliculaIniciada && funcionActual <= totalFunciones;
     }
 
+    //Usa el acomodador para checar si hay acientos y bloquearlos
     public synchronized boolean reservarAsiento() {
         if (asientosDisponibles.get() > 0 && !peliculaIniciada) {
             int numeroAsiento = encontrarPrimerAsientoDisponible();
@@ -136,6 +133,7 @@ public class RecursosCine {
         return false;
     }
 
+    //Checa cual es el asiento más cercano disponible
     private int encontrarPrimerAsientoDisponible() {
         for (int i = 1; i <= maxAsientos; i++) {
             if (!asientosOcupados.contains(i)) {
@@ -155,7 +153,6 @@ public class RecursosCine {
         barrierFinPelicula.await();
     }
 
-    // Nuevos métodos para control de clientes
     public synchronized void registrarClienteQuiereDulces() {
         clientesQuierenDulces.incrementAndGet();
     }
@@ -185,7 +182,6 @@ public class RecursosCine {
         return clientesConBoleto.get() > 0 || !colaAcomodador.isEmpty();
     }
 
-    // Getters y setters
     public Semaphore getSemaforoTaquilla() {
         return semaforoTaquilla;
     }

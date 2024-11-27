@@ -24,7 +24,6 @@ public class VentanaEstadoHilos {
         StringBuilder sb = new StringBuilder();
         sb.append("=== Estados de los Hilos ===\n");
 
-        // Recorrer todos los hilos y mostrar su estado
         for (Thread thread : allThreads) {
             sb.append("Hilo: ").append(thread.getName())
               .append(" - Estado: ").append(thread.getState()).append("\n");

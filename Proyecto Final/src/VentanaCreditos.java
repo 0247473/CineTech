@@ -10,11 +10,9 @@ public class VentanaCreditos extends JDialog {
         JPanel mainPanel = new JPanel(new BorderLayout(20, 20));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Agregar imagen al panel superior
         JLabel imageLabel = new JLabel();
         ImageIcon imageIcon = new ImageIcon(getClass().getResource("/images/Panamerican_University_color_logo.jpg"));
 
-        // Redimensionar la imagen
         Image scaledImage = imageIcon.getImage().getScaledInstance(200, 100, Image.SCALE_SMOOTH); // Ajustar tamaño
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
         imageLabel.setIcon(scaledIcon);
@@ -22,11 +20,9 @@ public class VentanaCreditos extends JDialog {
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
         mainPanel.add(imageLabel, BorderLayout.NORTH);
 
-        // Añadir el panel principal al diálogo
         add(mainPanel);
    
 
-        // Panel de información
         JPanel infoPanel = new JPanel();
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
 
@@ -50,7 +46,6 @@ public class VentanaCreditos extends JDialog {
 
         mainPanel.add(infoPanel, BorderLayout.CENTER);
 
-        // Botón de aceptar
         JButton okButton = new JButton("Aceptar");
         okButton.addActionListener(e -> dispose());
         JPanel buttonPanel = new JPanel();

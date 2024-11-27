@@ -34,7 +34,6 @@ public class VendedorTaquilla extends Thread {
                 if (cliente != null) {
                     atenderCliente(cliente);
                 } else {
-                    // Si no hay clientes en la cola, verificar si hay clientes en el cine
                     if (!recursos.hayClientesEnCine()) {
                         estado = EstadoVendedorTaquilla.TURNO_ACABADO;
                         System.out.println("Vendedor de taquilla " + id + " ha terminado su turno.");
@@ -78,7 +77,6 @@ public class VendedorTaquilla extends Thread {
         }
     }
 
-    // Getters y setters permanecen igual
     public EstadoVendedorTaquilla getEstado() {
         return estado;
     }

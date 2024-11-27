@@ -26,13 +26,11 @@ public class SimulacionCine {
                 cleanupAndExit();
             }
         });
-        // Aumentado significativamente el tamaño de la ventana
         frame.setSize(1600, 900);
         frame.setLayout(new BorderLayout());
     
         JPanel mainPanel = new JPanel(new BorderLayout());
     
-        // Panel de configuración con scroll
         JPanel configPanel = new JPanel();
         configPanel.setLayout(new BoxLayout(configPanel, BoxLayout.Y_AXIS));
     
@@ -46,7 +44,6 @@ public class SimulacionCine {
         configScrollPane.setPreferredSize(new Dimension(500, 800));
         mainPanel.add(configScrollPane, BorderLayout.WEST);
     
-        // Área de información con mayor tamaño y fuente
         infoArea = new JTextArea();
         infoArea.setEditable(false);
         infoArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 16));
@@ -77,7 +74,6 @@ public class SimulacionCine {
         StringBuilder mensajeError = new StringBuilder("Se han detectado los siguientes problemas:\n\n");
         boolean hayErrores = false;
 
-        // Validar número de clientes
         int numClientes = getSpinnerValue("numClientes");
         if (numClientes > 50) {
             mensajeError.append("- El número de clientes no puede exceder 50\n");
@@ -85,7 +81,6 @@ public class SimulacionCine {
             hayErrores = true;
         }
 
-        // Validar trabajadores
         int numTaquilleros = getSpinnerValue("numTaquilleros");
         if (numTaquilleros > 10) {
             mensajeError.append("- El número de taquilleros no puede exceder 10\n");
@@ -107,7 +102,6 @@ public class SimulacionCine {
             hayErrores = true;
         }
 
-        // Validar capacidades de buffers
         int bufferTaquilla = getSpinnerValue("bufferTaquilla");
         if (bufferTaquilla > 20) {
             mensajeError.append("- El tamaño de la cola de taquilla no puede exceder 20\n");
@@ -136,7 +130,6 @@ public class SimulacionCine {
             hayErrores = true;
         }
 
-        // Si hubo errores, mostrar mensaje y ajustar valores
         if (hayErrores) {
             mensajeError.append("\nLos valores han sido ajustados automáticamente a los límites permitidos.");
             JOptionPane.showMessageDialog(frame,
@@ -163,7 +156,6 @@ public class SimulacionCine {
     private JPanel createTiemposConfigPanel() {
         JPanel panel = createTitledPanel("Configuración de Tiempos (ms)");
 
-        // Tiempos existentes
         addLabeledSpinner(panel, "Tiempo Compra Boleto:", "tiempoCompraBoleto", 500, 2000, 10000, 500);
         addLabeledSpinner(panel, "Tiempo Compra Dulces:", "tiempoCompraDulces", 500, 2000, 10000, 500);
         addLabeledSpinner(panel, "Tiempo Ver Película:", "tiempoVerPelicula", 5000, 30000, 120000, 5000);
@@ -171,7 +163,6 @@ public class SimulacionCine {
         addLabeledSpinner(panel, "Tiempo Baño:", "tiempoBaño", 500, 1500, 5000, 500);
         addLabeledSpinner(panel, "Tiempo entre Funciones:", "tiempoEntreFunciones", 1000, 5000, 20000, 1000);
 
-        // Nuevos tiempos de transición
         addLabeledSpinner(panel, "Tiempo Atender Taquilla:", "tiempoAtenderTaquilla", 500, 2000, 5000, 500);
         addLabeledSpinner(panel, "Tiempo Imprimir Boleto:", "tiempoImprimirBoleto", 500, 2000, 5000, 500);
         addLabeledSpinner(panel, "Tiempo Atender Dulcería:", "tiempoAtenderDulceria", 500, 1500, 5000, 500);
@@ -208,12 +199,10 @@ public class SimulacionCine {
         return panel;
     }
 
-    // Método addLabeledSpinner actualizado con tooltips para los nuevos límites
     private void addLabeledSpinner(JPanel panel, String label, String key, int min, int value, int max, int step) {
         panel.add(new JLabel(label));
         JSpinner spinner = new JSpinner(new SpinnerNumberModel(value, min, max, step));
         
-        // Agregar tooltips informativos
         switch (key) {
             case "numClientes":
                 spinner.setToolTipText("Límite máximo: 50 clientes");
@@ -273,7 +262,6 @@ public class SimulacionCine {
     private void cleanupAndExit() {
         stopSimulation();
 
-        // Cerrar todas las ventanas abiertas por la aplicación
         Window[] windows = Window.getWindows();
         for (Window window : windows) {
             window.dispose();
@@ -294,7 +282,6 @@ public class SimulacionCine {
     }
 
     private void startSimulation() {
-        // Obtener valores de configuración usando el método auxiliar
         int numClientes = getSpinnerValue("numClientes");
         int numTaquilla = getSpinnerValue("numTaquilleros");
         int numDulceria = getSpinnerValue("numDulceros");
@@ -318,7 +305,6 @@ public class SimulacionCine {
         double probDulces = getSpinnerValue("probDulces") / 100.0;
         double probBaño = getSpinnerValue("probBaño") / 100.0;
 
-        // Crear recursos del cine
         RecursosCine recursos = new RecursosCine(bufferTaquilla, bufferDulceria, bufferAcomodador,
                 numAsientos, tiempoInicioPelicula, duracionPelicula, numFunciones, numClientes);
 
@@ -345,7 +331,6 @@ public class SimulacionCine {
 
         running = true;
 
-        // Obtener los nuevos tiempos de transición
         int tiempoAtenderTaquilla = getSpinnerValue("tiempoAtenderTaquilla");
         int tiempoImprimirBoleto = getSpinnerValue("tiempoImprimirBoleto");
         int tiempoAtenderDulceria = getSpinnerValue("tiempoAtenderDulceria");
@@ -419,23 +404,19 @@ public class SimulacionCine {
     SwingUtilities.invokeLater(() -> {
         StringBuilder sb = new StringBuilder();
         
-        // Formato de columnas
         String formatoColumna = "%-40s %-40s %-40s\n";
         
-        // Encabezados
         sb.append(String.format(formatoColumna, 
             "=== Estados Generales ===", 
             "=== Estados de Colas ===",
             "=== Estados de Clientes ==="));
         
-        // Preparar datos de estados generales
         List<String> estadosGenerales = new ArrayList<>();
         estadosGenerales.add(String.format("Función actual: %d", recursos.getFuncionActual()));
         estadosGenerales.add(String.format("Tiempo restante: %d ms", recursos.getTiempoRestante()));
         estadosGenerales.add(String.format("Asientos: %d/%d", 
             recursos.getAsientosDisponibles(), recursos.getMaxAsientos()));
 
-        // Preparar datos de colas
         List<String> estadosColas = new ArrayList<>();
         estadosColas.add(String.format("Cola Taquilla: %d/%d",
             recursos.getBufferOccupancyTaquilla(), recursos.getBufferSizeTaquilla()));
@@ -444,7 +425,6 @@ public class SimulacionCine {
         estadosColas.add(String.format("Cola Acomodador: %d/%d",
             recursos.getBufferOccupancyAcomodador(), recursos.getBufferSizeAcomodador()));
 
-        // Preparar estados de clientes
         Map<EstadoCliente, Integer> estadosClientes = new HashMap<>();
         for (Cliente cliente : clientes) {
             estadosClientes.merge(cliente.getEstado(), 1, Integer::sum);
@@ -455,7 +435,6 @@ public class SimulacionCine {
                 estado, estadosClientes.getOrDefault(estado, 0)));
         }
 
-        // Combinar las tres columnas
         int maxRows = Math.max(Math.max(estadosGenerales.size(), estadosColas.size()), estadosClientesStr.size());
         for (int i = 0; i < maxRows; i++) {
             String col1 = i < estadosGenerales.size() ? estadosGenerales.get(i) : "";
@@ -464,15 +443,12 @@ public class SimulacionCine {
             sb.append(String.format(formatoColumna, col1, col2, col3));
         }
 
-        // Separador
         sb.append("\n");
 
-        // Estados de trabajadores en dos columnas
         sb.append(String.format("%-60s %-60s\n", 
             "=== Estados de Taquilleros ===", 
             "=== Estados de Dulceros ==="));
 
-        // Preparar estados de taquilleros
         Map<EstadoVendedorTaquilla, Integer> estadosTaquilleros = new HashMap<>();
         for (VendedorTaquilla taquillero : taquilleros) {
             estadosTaquilleros.merge(taquillero.getEstado(), 1, Integer::sum);
@@ -483,7 +459,6 @@ public class SimulacionCine {
                 estado, estadosTaquilleros.getOrDefault(estado, 0)));
         }
 
-        // Preparar estados de dulceros
         Map<EstadoVendedorDulceria, Integer> estadosDulceros = new HashMap<>();
         for (VendedorDulceria dulcero : dulceros) {
             estadosDulceros.merge(dulcero.getEstado(), 1, Integer::sum);
@@ -494,7 +469,6 @@ public class SimulacionCine {
                 estado, estadosDulceros.getOrDefault(estado, 0)));
         }
 
-        // Combinar las columnas de trabajadores
         int maxRowsTrabajadores = Math.max(estadosTaquillerosStr.size(), estadosDulcerosStr.size());
         for (int i = 0; i < maxRowsTrabajadores; i++) {
             String col1 = i < estadosTaquillerosStr.size() ? estadosTaquillerosStr.get(i) : "";
@@ -502,7 +476,6 @@ public class SimulacionCine {
             sb.append(String.format("%-60s %-60s\n", col1, col2));
         }
 
-        // Estados de acomodadores en su propia sección
         sb.append("\n=== Estados de Acomodadores ===\n");
         Map<EstadoAcomodador, Integer> estadosAcomodadores = new HashMap<>();
         for (Acomodador acomodador : acomodadores) {
@@ -513,7 +486,6 @@ public class SimulacionCine {
                 estado, estadosAcomodadores.getOrDefault(estado, 0)));
         }
 
-        // Actualizar el área de texto
         infoArea.setText(sb.toString());
     });
 }
